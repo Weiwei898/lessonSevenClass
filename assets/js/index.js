@@ -184,23 +184,48 @@ if (addBtn) {
     const priceEl = document.querySelector('#ticketPrice');
     const rateEl = document.querySelector('#ticketRate');
 
+    // 取得所有錯誤訊息顯示區 (用於清除前一次的提示)
+    const messageElements = document.querySelectorAll('.alert-message p');
+
+    let isValid = true;
+
+    //清空所有舊的錯誤提示
+    messageElements.forEach(p => p.innerHTML = '');
+
     //未輸入資籵的提示
-   if (!nameEl.value || !imgEl.value || areaEl.value === "") {
-    const nameElTitle = document.querySelector('#ticketName-message');
-    const imgElTitle = document.querySelector('#ticketImgUrl-message');
-    const areaElTitle = document.querySelector('#ticketRegion-message');
-    const descElTitle = document.querySelector('#ticketDescription-message');
-    const groupElTitle = document.querySelector('#ticketNum-message');
-    const priceElTitle = document.querySelector('#ticketPrice-message');
-    const rateElTitle = document.querySelector('#ticketRate-message');
-    nameElTitle.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>${nameElTitle.dataset.message}<span>必填!</span>`;
-    imgElTitle.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>${imgElTitle.dataset.message}<span>必填!</span>`;
-    areaElTitle.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>${areaElTitle.dataset.message}<span>必填!</span>`;
-    descElTitle.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>${descElTitle.dataset.message}<span>必填!</span>`;
-    groupElTitle.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>${groupElTitle.dataset.message}<span>必填!</span>`;
-    priceElTitle.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>${priceElTitle.dataset.message}<span>必填!</span>`;
-    rateElTitle.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>${rateElTitle.dataset.message}<span>必填!</span>`;
-    return;
+    if (!nameEl.value.trim()) {
+      document.querySelector('#ticketName-message').innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>套票名稱<span>必填!</span>`;
+      isValid = false;
+    }
+    if (!imgEl.value.trim()) {
+      document.querySelector('#ticketImgUrl-message').innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>圖片網址<span>必填!</span>`;
+      isValid = false;
+    }
+    if (areaEl.value === "") {
+      document.querySelector('#ticketRegion-message').innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>景點地區<span>必選!</span>`;
+      isValid = false;
+    }
+    const priceVal = Number(priceEl.value);
+    if (!priceEl.value.trim() || priceVal < 0 || isNaN(priceVal)) {
+      document.querySelector('#ticketPrice-message').innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>套票金額<span>必填且需 ≥ 0 的數字!</span>`;
+      isValid = false;
+    }
+    const groupVal = Number(groupEl.value);
+    if (!groupEl.value.trim() || groupVal < 0 || isNaN(groupVal)) {
+      document.querySelector('#ticketNum-message').innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>套票組數<span>必填且需 ≥ 0 的數字!</span>`;
+      isValid = false;
+    }
+    const rateVal = Number(rateEl.value);
+    if (!rateEl.value.trim() || rateVal < 0 || rateVal > 10 || isNaN(rateVal)) {
+      document.querySelector('#ticketRate-message').innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>套票星級<span>必填且需在 0-10 之間!</span>`;
+      isValid = false;
+    }
+    if (!descEl.value.trim()) {
+      document.querySelector('#ticketDescription-message').innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>套票描述<span>必填!</span>`;
+      isValid = false;
+    }  
+    if (!isValid) {
+      return;
     }
 
     const newItem = {
